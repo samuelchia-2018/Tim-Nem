@@ -11,7 +11,7 @@ class Company extends Model
     use Notifiable, SoftDeletes;
 
     protected $fillable = [
-        'symbol', 'name',
+        'symbol', 'name','industry','logo'
     ];
     protected $table = "companies";
 

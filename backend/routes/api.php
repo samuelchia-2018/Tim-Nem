@@ -18,4 +18,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/companies', 'CompanyController@getAllCompanies');
+Route::get('companies', 'CompanyController@getAllCompanies');
+
+Route::post('companies/refresh', 'CompanyController@refreshCompanies');

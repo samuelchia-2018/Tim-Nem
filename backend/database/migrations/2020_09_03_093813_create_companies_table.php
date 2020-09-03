@@ -17,6 +17,8 @@ class CreateCompaniesTable extends Migration
             $table->id();
             $table->string('symbol')->unique();
             $table->string('name');
+            $table->string('industry');
+            $table->string('logo');
             $table->timestamps();
         });
     }
