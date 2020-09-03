@@ -1,0 +1,153 @@
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu a::after {
+    transform: rotate(-90deg);
+    position: absolute;
+    right: 6px;
+    top: .8em;
+}
+
+.dropdown-submenu .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-left: .1rem;
+    margin-right: .1rem;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.bg {
+    background-image: url("../img/stonks.jpg");
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+/* for search bar button */
+
+.mycustom {
+    position: relative;
+}
+
+.mycustom input[type=text] {
+    /* border-color:#9D9D9D;
+    border-radius:30px;
+    border:1px; */
+    width: 100%;
+    padding-right: 123px;
+}
+
+.mycustom .input-group-prepend {
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    bottom: 4px;
+    z-index: 9;
+}
+
+.active {
+    background-color: #26C1E0;
+}
+
+.action {
+    cursor: pointer;
+    size: 30px;
+    transition: transform 0.5s;
+    background-size: 100% auto;
+    background-position: center;
+    background-color: Transparent;
+    background-repeat: no-repeat;
+    border: none;
+    outline: none;
+    margin: 0px 5px;
+    vertical-align: middle;
+}
+
+.carousel-control-next-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='black' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E");
+}
+
+.carousel-control-prev-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='black' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E");
+}
+
+.action-list:last-child {
+    margin-right: 10px;
+}
+
+.action:hover {
+    transform: scale(1.2);
+}
+
+.barlow {
+    font-family: 'Barlow Semi Condensed';
+}
+
+.popover-content {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: "inline-block";
+    /* display: flex; */
+    white-space: nowrap;
+    left: 0;
+    right: 0;
+}
+
+.flex-fill {
+    flex: 1;
+}
+
+.rating {
+    display: inline-block;
+    unicode-bidi: bidi-override;
+    color: #c5c5c5;
+    width: 90px;
+    position: relative;
+    padding: 0;
+/*     text-shadow: 0px 1px 0 #a2a2a2; */
+}
+  
+.rating-upper {
+    color: #e7711b;
+    padding: 0;
+    position: absolute;
+    z-index: 1;
+    display: flex;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+}
+  
+.rating-lower {
+    padding: 0;
+    top: 0;
+    left: 0;
+    display: flex;
+    z-index: 0;
+}
+
+.review-pop {
+    width: auto;
+    display: table;
+    padding-right:10px;
+}
+
+a.product-link:link {
+    color: #136d7b;
+}
+a.product-link:visited {
+    color: #08A3C2;
+}
+a.product-link:hover {
+    color: #de164f;
+}
