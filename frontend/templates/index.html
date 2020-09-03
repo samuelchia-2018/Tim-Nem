@@ -78,8 +78,10 @@
 
         $(document).on('click','#searchbtn',function() {
             var searchstr = encodeURI($("#searchbar").val());
+            var storage = window.sessionStorage;
+            storage.setItem('searchStr',searchstr);
             console.log(searchstr);
-            window.location.href='/search?q='+searchstr;
+            window.location.href='./search.html?q='+searchstr;
         });
 
         $(document).on('keypress','#searchbar',function(e) {
