@@ -7,7 +7,7 @@
 
 
 async function getstockprices(companyname){
-    var serviceURL = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + companyname + '&apikey=demo';
+    var serviceURL = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=' + companyname + '&apikey=NBKV8YLSSH92V2LU';
     //console.log(serviceURL);
     var response = await fetch(serviceURL);
     //console.log(response);
@@ -30,19 +30,26 @@ async function getstockprices(companyname){
     for(i=0; i<keys.length; i++){
         toreturn.push({x:keys[i], y: Number(close[i])});
     }
-    //console.log(toreturn);
+    console.log(toreturn);
     return toreturn;
 }
 
 
-function getstockchart(datapoints){
-    var stockChart = new CanvasJS.StockChart("chartContainer",{
+
+
+
+function getstockchart(datapoints, companyname){
+  var stockChart = new CanvasJS.StockChart("chartContainer",{
     title: {
-        text: "StockChart Title"
+        text: "Stock Prices"
       },
-    charts: [{      
+      charts: [{
+        toolTip:{   
+        content: "{name}: {y}"      
+      },      
       data: [{        
         type: "line", //Change it to "spline", "area", "column"
+        name: "AAPL",
         dataPoints : datapoints
       }]
     }],
@@ -56,16 +63,66 @@ function getstockchart(datapoints){
   stockChart.render();
 }
 
+function getstockchartmultiple(datapointsList, companynameList){
+  //datapointsList should be list of datapoints, companynameList should be name of companynames
 
+  //need to format the datapoints list so that the chartapi can read, we add it into datalist in the correct format
+  var datalist = [];
+  for(var i =0; i<companynameList.length; i++){
+    var singledataformat = {
+      type: "line", //Change it to "spline", "area", "column"
+      name: companynameList[i],
+      dataPoints: datapointsList[i]
+    };
+    datalist.push(singledataformat);
+  }
+
+  var stockChart = new CanvasJS.StockChart("chartContainer",{
+    title: {
+        text: "Stock Prices"
+      },
+      charts: [{
+        toolTip:{   
+        content: "{name}: {y}"      
+      },      
+      data: datalist
+    }],
+    navigator: {
+      slider: {
+        minimum: new Date(2018,04, 01),
+        maximum: new Date(2018,06, 01)
+      }
+    }
+  }); 
+  stockChart.render();
+}
 
 async function renderchart(companyname){
     var datapoints = await getstockprices(companyname);
-    getstockchart(datapoints);
+    getstockchart(datapoints, companyname);
 }
 
+async function renderchartMultiple(companynameList){
+  var datapointsList = [];
+  for (var i =0; i< companynameList.length; i++){
+    var datapoints = await getstockprices(companynameList[i]);
+    datapointsList.push(datapoints);
+  }
+  getstockchartmultiple(datapointsList, companynameList);
+}
+
+
+//for single company
 $(document).ready(function(){
-    renderchart("IBM");
-})
+    renderchart("AAPL");
+});
+
+
+//for multiple companies
+$(document).ready(function(){
+    var companynameListdemo = ['AAPL', 'IBM', 'GS'];
+    renderchartMultiple(companynameListdemo);
+});
 
 </script>
 </head>
