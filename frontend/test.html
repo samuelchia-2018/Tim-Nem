@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <h1>Hello</h1>
+        <script>
+        </script>
+        <p id= "hello"></p>
+        <script src='functions.js'></script>
+        <script>
+    $(document).ready(async function(){
+        var data = await computeallratios("AAPL");
+        console.log(data);
+    })
+        </script>
+    </body>
+</html>
