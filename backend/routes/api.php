@@ -22,6 +22,7 @@ Route::get('companies', 'CompanyController@getAllCompanies');
 Route::get('companies/symbol/{symbol}', 'CompanyController@getCompaniesBySymbol');
 Route::get('companies/search/symbol/{symbol}', 'CompanyController@searchCompaniesBySymbol');
 Route::get('companies/search/name/{name}', 'CompanyController@searchCompaniesByName');
+Route::get('companies/industry/{industry}', 'CompanyController@getCompaniesByIndustry');
 
 Route::get('industries', 'IndustryController@getAllIndustries');
 
