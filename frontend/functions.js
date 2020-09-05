@@ -1,12 +1,12 @@
 async function getcompanybalancesheetjsondata(companyname){
-    var serviceURL = "https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=" + companyname+"&apikey=demo";
+    var serviceURL = "https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=" + companyname+"&apikey=NBKV8YLSSH92V2LU";
     var companyfinancialdatajson = await fetch(serviceURL, {method: 'GET'});
     var data = await companyfinancialdatajson.json();
     return data;
 }
 
 async function getcompanyincomestatementjsondata(companyname){
-    var serviceURL = "https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=" + companyname+"&apikey=demo";
+    var serviceURL = "https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=" + companyname+"&apikey=NBKV8YLSSH92V2LU";
     var companyfinancialdatajson = await fetch(serviceURL, {method: 'GET'});
     var data = await companyfinancialdatajson.json();
     return data;
@@ -216,6 +216,17 @@ async function getrevenue(companyname, income_statement){
     return all_revenue;    
 }
 
+async function getnetincome(companyname, income_statement){
+    var annual_reports = income_statement.annualReports;
+    var all_net_income = [];
+    for (var i =0; i< annual_reports.length; i++){
+        if(annual_reports[i].netIncome != null){
+            all_net_income.push(annual_reports[i].netIncome);
+        }
+    }
+    return all_net_income;
+}
+
 
 //async function getdepreciation()
 
@@ -303,7 +314,8 @@ async function intervalMeasure(companyname, income_statement){
     var intervalMeasurecomputed = [];
     if (COGS != null && operatingexpenses != null){
         for(i=0; i< COGS.length; i++){
-            intervalMeasurecomputed.push((Number(COGS[i])+Number(operatingexpenses[i]))/365);
+            console.log((Number(COGS[i]) + Number(operatingexpenses[i])));
+            intervalMeasurecomputed.push((Number(COGS[i]) + Number(operatingexpenses[i]))/365);
         }
         return intervalMeasurecomputed;
     }
@@ -370,7 +382,7 @@ async function interestcoverage(companyname, income_statement){
         for (i=0; i<ebit.length; i++){
             interestcoveragecomputed.push(Number(ebit[i])/Number(interest[i]));
         }
-        return interestcoveragecomputed[i];
+        return interestcoveragecomputed;
     }
     else{
         return "Interest coverages cannot be calculated";
@@ -429,7 +441,7 @@ async function dayssalesinreceivables(companyname, income_statement, balance_she
     var receivableturnovers = await receivableturnover(companyname, income_statement, balance_sheet);
     var dayssalesinreceivablescomputed = [];
     if (receivableturnovers != null){
-        for(i=0; i<dayssalesinreceivables[i]; i++){
+        for(i=0; i<receivableturnovers.length; i++){
             dayssalesinreceivablescomputed.push(365/receivableturnovers[i])
         }
         return dayssalesinreceivablescomputed;
@@ -471,6 +483,159 @@ async function dayspayableoutstanding(companyname, income_statement, balance_she
     }
 }
 
+//Asset turnover ratios below
+async function totalAssetTurnover(companyname, income_statement, balance_sheet){
+    var totalrevenue = await getrevenue(companyname, income_statement);
+    var totalAssets = await gettotalasset(companyname, balance_sheet);
+    var totalAssetTurnovercomputed = [];
+    if (totalrevenue != null && totalAssets != null){
+        for (i =0; i< totalrevenue.length; i++){
+            totalAssetTurnovercomputed.push(Number(totalrevenue[i])/Number(totalAssets[i]));
+        }
+        return totalAssetTurnovercomputed;
+    }
+    else{
+        return "Total asset turnovers cannot be calculated";
+    }
+}
+
+async function NWCturnover(companyname, income_statement, balance_sheet){
+    var NWCs = await getNWC(companyname, balance_sheet);
+    var all_revenue = await getrevenue(companyname, income_statement);
+    var NWCturnovercomputed = [];
+    for (i =0; i < NWCs.length; i++){
+        NWCturnovercomputed.push(Number(all_revenue[i])/ Number(NWCs[i]));
+    }
+    return NWCturnovercomputed;
+}
+
+async function fixedAssetTurnover(companyname, income_statement, balance_sheet){
+    var all_revenue = await getrevenue(cashratio, income_statement);
+    var all_total_assets = await gettotalasset(companyname, balance_sheet);
+    var all_current_assets = await getcurrentassets(companyname, balance_sheet);
+    var fixedAssetTurnovercomputed = [];
+    if (all_revenue != null && all_total_assets != null && all_current_assets!= null){
+        for (i=0; i< all_revenue.length; i++){
+            fixedAssetTurnovercomputed.push(Number(all_revenue[i])/(Number(all_total_assets[i]) - Number(all_current_assets[i])));
+        }
+        return fixedAssetTurnovercomputed;
+    }
+}
+
+//profitability measures below
+
+async function netprofitmargin(companyname, income_statement){
+    var all_net_income = await getnetincome(companyname, income_statement);
+    var all_revenue = await getrevenue(companyname, income_statement);
+    var netprofitmargincomputed = [];
+    if (all_net_income != null && all_revenue != null){
+        for(i=0; i< all_net_income.length; i++){
+            netprofitmargincomputed.push(Number(all_net_income[i])/Number(all_revenue[i]));
+        }
+        return netprofitmargincomputed;
+    }
+    else{
+        return "Net profit margin cannot be calculated";
+    }
+}
+
+async function roa(companyname, income_statement, balance_sheet){
+    var totalAssets = await gettotalasset(companyname, balance_sheet);
+    var all_net_income = await getnetincome(companyname, income_statement);
+    var roaComputed = [];
+    if(totalAssets != null && all_net_income!=null){
+        for(i=0; i<totalAssets.length; i++){
+            roaComputed.push(Number(all_net_income[i])/Number(totalAssets[i]));
+        }
+        return roaComputed;
+    }
+    else{
+        return "Return on Assets cannot be calculated";
+    }
+}
+
+async function roe(companyname, income_statement, balance_sheet){
+    var totalequity = await gettotalequity(companyname, balance_sheet);
+    var all_net_income = await getnetincome(companyname, income_statement);
+    var roeComputed = [];
+    if(totalequity != null && all_net_income!=null){
+        for(i=0; i<totalequity.length; i++){
+            roeComputed.push(Number(all_net_income[i])/Number(totalequity[i]));
+        }
+        return roeComputed;
+    }
+    else{
+        return "Return on Equity cannot be calculated";
+    }
+}
+
+//market value calculations below
+
+
+async function getstockprices2(companyname){
+    var serviceURL = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + companyname + '&apikey=NBKV8YLSSH92V2LU';
+    //console.log(serviceURL);
+    var response = await fetch(serviceURL);
+    //console.log(response);
+    var data = await response.json();
+    //console.log(data);
+    var timeSeriesData = data['Time Series (Daily)'];
+    //console.log(timeSeriesData);
+    var keys = [];
+    for (var key in timeSeriesData){
+        keys.push(new Date(key));
+    }
+    var close = [];
+    for (var key in timeSeriesData){
+        var current = timeSeriesData[key];
+        close.push(current['4. close']);
+        //console.log(current['4. close']);
+    }
+    //console.log(keys)
+    return close;
+}
+
+async function getEPS(companyname){
+    var serviceURL = 'https://www.alphavantage.co/query?function=OVERVIEW&symbol=' + companyname + '&apikey=NBKV8YLSSH92V2LU';
+    //console.log(serviceURL);
+    var response = await fetch(serviceURL);
+    var data = await response.json();
+    var eps = await data.EPS;
+    console.log(eps);
+    return eps;
+}
+
+async function PEratio(companyname){
+    var stockprices = await getstockprices2(companyname);
+    var eps = await getEPS(companyname);
+    var PEratiocomputed = [];
+    for (i=0; i<stockprices.length; i++){
+        PEratiocomputed.push(Number(stockprices[i])/Number(eps));
+    }
+    return PEratiocomputed;
+}
+
+async function marketobookratio(companyname, balance_sheet){
+    var serviceURL = "http://127.0.0.1:9000/getmarketcap/" + companyname;
+    var response = await fetch(serviceURL);
+    var data = await response.json();
+    var marketcap = data.Marketcapvalue;
+    var totalequity = await gettotalequity(companyname, balance_sheet);
+    console.log(marketcap);
+    console.log(totalequity[0]);
+    var equitynow = totalequity[0];
+    
+    var currentmarkettobookratio = Number(marketcap) / Number(equitynow);
+    if(currentmarkettobookratio != null){
+        return currentmarkettobookratio;
+    }
+    else{
+        return "Cannot calculate market to book ratio";
+    }
+}
+
+
+
 
 async function computeallratios(companyname){
     var balance_sheet_data = await getcompanybalancesheetjsondata(companyname);
@@ -482,7 +647,7 @@ async function computeallratios(companyname){
     var quickratios = await quickratio(companyname, balance_sheet_data);
     var cashratios = await cashratio(companyname, balance_sheet_data);
     var NWCtoTotalAssets = await NWCtoTotalAsset(companyname, balance_sheet_data);
-    var intervelMeasures = await intervalMeasure(companyname, balance_sheet_data);
+    var intervelMeasures = await intervalMeasure(companyname, income_statement_data);
 
     //financial leverage ratios here
     var totaldebtratios = await totaldebtratio(companyname, balance_sheet_data);
@@ -505,6 +670,20 @@ async function computeallratios(companyname){
     var payableturnovers = await payableturnover(companyname, income_statement_data, balance_sheet_data);
     var dayspayableoutstanding1 = await dayspayableoutstanding(companyname, income_statement_data, balance_sheet_data);
 
+    //asset turnover ratios here 
+    var totalassetturnovers = await totalAssetTurnover(companyname, income_statement_data, balance_sheet_data);
+    var NWCturnovers = await NWCturnover(companyname, income_statement_data, balance_sheet_data);
+    var fixedAssetTurnovers = await fixedAssetTurnover(companyname, income_statement_data, balance_sheet_data);
+
+    //profitability measures here
+    var netprofitmargins = await netprofitmargin(companyname, income_statement_data);
+    var roas = await roa(companyname, income_statement_data, balance_sheet_data);
+    var roes = await roe(companyname, income_statement_data, balance_sheet_data);
+
+    //market value measures here
+    var peratios = await PEratio(companyname);
+    var MTB = await marketobookratio(companyname, balance_sheet_data);
+
     var finaldata = {
         "CurrentRatio" : currentratios,
         "QuickRatio": quickratios,
@@ -518,13 +697,17 @@ async function computeallratios(companyname){
         "ReceivablesTurnover": receivableturnovers,
         "DaysSalesInReceivables": dayssalesinreceivables1,
         "PayableTurnovers": payableturnovers,
-        "DaysPayableOutstanding": dayspayableoutstanding1
+        "DaysPayableOutstanding": dayspayableoutstanding1,
+        "TotalAssetTurnover": totalassetturnovers,
+        "NWCTurnover" : NWCturnovers,
+        "FixedAssetTurnover": fixedAssetTurnovers,
+        "NetProfitMargin": netprofitmargins,
+        "ReturnOnAsset": roas,
+        "ReturnOnEquity": roes,
+        "PriceEquityRatio": peratios,
+        "MarketToBookRatio": MTB
     };
 
     console.log(finaldata);
     return finaldata;
-}
-
-function testfunction(){
-    console.log("test");
 }
