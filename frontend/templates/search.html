@@ -11,144 +11,179 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/regular.min.css" rel="stylesheet"/>
 
     <!-- JQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
 
-    <!-- Bootstrap & Material Icons -->
+    <!-- Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-icons/3.0.1/iconfont/material-icons.min.css"> -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js" integrity="sha512-aFvi2oPv3NjnjQv1Y/hmKD7RNMendo4CZ2DwQqMWzoURKxcqAoktj0nNG4LU8m23+Ws9X5uVDD4OXLqpUVXD5Q==" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css" integrity="sha512-EvvoSMXERW4Pe9LjDN9XDzHd66p8Z49gcrB7LCUplh0GcEHiV816gXGwIhir6PJiwl0ew8GFM2QaIg2TW02B9A==" crossorigin="anonymous" />
 
     <!-- CSS -->
     <link rel="stylesheet" href="../static/css/style.css?v=1">
+
+    <!-- CanvasJS-->
+    <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.stock.min.js"></script>
 
     <title>TimNem | Search</title>
 </head>
 
 <body>
     <div class="container-fluid d-flex h-100 flex-column">
-    <div class="row">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-family: 'Barlow Semi Condensed';width: 100%;">
-        <div class="d-flex flex-grow-1">
-            <span class="w-100 d-lg-none d-block"><!-- hidden spacer to center brand on mobile --></span>
-            <a class="navbar-brand d-none d-lg-inline-block" href=".">
-                <h2 style="display:inline;"><b>TIMNEM</b></h2>
-            </a>
-            <a class="navbar-brand-two mx-auto d-lg-none d-inline-block" href="#">
-                <img src="/img/snap.png" alt="logo" style="width:30px;height:30px">
-            </a>
-            <form class="form-inline mycustom">
-                <input type="search" value="" class="input-ol form-control barlow" name="q" id="searchbar" aria-describedby="inputGroupPrepend2" placeholder="Search for industry..." style="width:350px; border:1px solid #9D9D9D;border-radius:30px"  autocomplete="off"/>
-                <div class="input-group-prepend" style="padding-right: 5px;padding-top:5px">
-                    <i class="fas fa-search action" id="searchbtn"></i>
+        <div class="row">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-family: 'Barlow Semi Condensed';width: 100%;">
+                <div class="d-flex flex-grow-1">
+                    <span class="w-100 d-lg-none d-block"><!-- hidden spacer to center brand on mobile --></span>
+                    <a class="navbar-brand d-none d-lg-inline-block" href=".">
+                        <h2 style="display:inline;"><b>TIMNEM</b></h2>
+                    </a>
+                    <form class="form-inline mycustom">
+                        <div class="input-group mycustom" style="width:50%;">
+                            <select class="input-ol form-control" id="searchMenu" style="width:630px; border-radius:30px; font-family:'Barlow Semi Condensed';" aria-describedby="inputGroupPrepend2" placeholder="Search for industry...">
+                                <option disabled>Select an industry</option>
+                            </select>
+                            <br>
+                            <button class="btn btn-secondary action barlow" id="searchbtn">Get Companies</button>
+                        </div>
+                    </form>
+                    <div class="w-100 text-right">
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#myNavbar">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                    </div>
                 </div>
-            </form>
-            <div class="w-100 text-right">
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#myNavbar">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            </div>
+                <div class="collapse navbar-collapse flex-grow-1 text-right" id="myNavbar">
+                    <ul class="navbar-nav ml-auto flex-nowrap">
+                        <li class="nav-item">
+                            <a href="." class="nav-link m-2 menu-item">About Us</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
         </div>
-        <div class="collapse navbar-collapse flex-grow-1 text-right" id="myNavbar">
-            <ul class="navbar-nav ml-auto flex-nowrap">
-                <li class="nav-item">
-                    <a href="." class="nav-link m-2 menu-item">About Us</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-    </div>
-    <div id='workspace' class="row h-100 flex-grow-1" style="padding:10px; overflow:scroll;">
-        <div class="col-sm-12">
-            <br>
-            <div id="results">
-                <h3 class="barlow" style="color:#00705c"><b id="result-header"></b></h3><br>
-                <div class="card-container" id="results-container">
+        <div id='workspace' class="row h-100 flex-grow-1" style="padding:10px; overflow:scroll;">
+            <div class="col-sm-12">
+                <br>
+                <div id="results">
+                    <h3 class="barlow" style="color:#00705c"><b id="result-header"></b></h3><br>
+                    <div id="company-select-container" style="display:none;">
+                        <select id="company-select" multiple></select>
+                        <button class="btn btn-secondary action barlow" id="get-company-data">Get Company Data</button>
+                        <button class="btn btn-secondary action barlow" id="clear-selection">Clear Selection</button>
+                    </div>
+                    <div class="card-container" id="results-container">
+                    </div>
                 </div>
             </div>
+            <div id="chartContainer" style="height: 450px; width: 100%;"></div>
         </div>
     </div>
-    </div>
+    <script type="text/javascript" src="../static/js/companydata.js"></script>
+    <script type="text/javascript" src="../static/js/stockfunctions.js"></script>
+    <script type="text/javascript" src="../static/js/functions.js"></script>
     <script>
-        $('.dropdown-menu a.dropdown-toggle').on('click', function(e) {
-            if (!$(this).next().hasClass('show')) {
-                $(this).parents('.dropdown-menu').first().find('.show').removeClass('show');
-            }
-            var $subMenu = $(this).next('.dropdown-menu');
-            $subMenu.toggleClass('show');
-
-
-            $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function(e) {
-                $('.dropdown-submenu .show').removeClass('show');
-            });
-
-
-            return false;
-        });
-
-        $(document).on('click','#searchbtn',searchNext);
-
-        $(document).on('keyup', function(e) {
-            if (e.keyCode==13){
-                searchNext();
-            }
-        });
-
-        function searchNext(){
-            var searchstr = encodeURI($("#searchbar").val());
-            console.log(searchstr);
-            var p = $("#pinned-container .card:not(.placeholder)").map(function() { return this.id }).get().join(',')
-            window.location.href='./search?q='+searchstr + '&p=' + p;
-        }
-
-        $(document).ready(function () {
-            function handleEnter(e) {
-                if (e.which == 13) {
-                    // enter pressed
-                    var searchKeyWord = $("#SearchTextBox").val();
-                    window.location.href = "/Listings.aspx?K=" + searchKeyWord;
-                }
-            }
-
-            $(document).keypress(handleEnter);
-            $("#SearchTextBox").keypress(handleEnter);
-
-        }); 
-
-        $('.pop').popover({
-            trigger: 'manual',
-            html: true,
-            animation: false
-        })
-        .on('mouseenter', function () {
-            var _this = this;
-            $(this).popover('show');
-            $('.popover').on('mouseleave', function () {
-                $(_this).popover('hide');
-            });
-        }).on('mouseleave', function () {
-            var _this = this;
-            setTimeout(function () {
-                if (!$('.popover:hover').length) {
-                    $(_this).popover('hide');
-                }
-            }, 300);
-        });
-
-        $('[data-toggle="popover"]').popover({html:true});
-        
+        // toggles for bootstrap popups
         $(document).ready(function(){
-            $('[data-toggle="tooltip"]').tooltip();   
+            $('body').tooltip({
+                selector: '[data-toggle="tooltip"]'
+            });
+            $('body').popover({
+                html:true,
+                selector: '[data-toggle="popover"]'
+            });
         });
 
+        // set results header
         $(document).ready(function() {
-            var star_rating_width = $('.fill-ratings span').width();
-            $('.star-ratings').width(star_rating_width);
-        });
-
-        $(document).ready(function() {
-            $('#result-header').append("Search results for: " + window.sessionStorage.getItem('searchStr'));
+            $('#result-header').append("Showing companies for: " + localStorage.getItem('selectedIndustry'));
         })
+
+        // set up search bar and search results
+        $(document).ready(async function(){
+            var selectedIndustry = window.localStorage.getItem("selectedIndustry");
+            var industries = await getAllIndustries();
+
+            industries.forEach(industryJSON => {
+                var option = `<option value="${industryJSON.name}"`;
+                if (industryJSON.name == selectedIndustry){
+                    option += " selected";
+                }
+                option += `>${industryJSON.name}</option>`;
+                $("#searchMenu").append(option)
+            });
+
+            var companies = await getCompaniesByIndustry(selectedIndustry);
+            if (companies.length == 0) {
+                $("#results").append(`<h4 class='barlow'>No company data available for the ${selectedIndustry} industry.</h4>`);
+            } else {
+                $("#company-select-container").show();
+                companies.forEach(companyJSON => {
+                    $("#company-select").append(`<option value=${companyJSON.symbol}>${companyJSON.name}</option>`);
+                })
+                $("#company-select").multiselect("rebuild");
+            }
+        })
+
+        // setup and config for multiselect input
+        $(document).ready(function() {
+            $('#company-select').multiselect({
+                maxHeight: 200,
+                buttonWidth: '500px',
+                nonSelectedText: "Select some companies!",
+                onChange: function(option, checked) {
+                    // Get selected options.
+                    var selectedOptions = $('#company-select option:selected');
+    
+                    if (selectedOptions.length >= 5) {
+                        // Disable all other checkboxes.
+                        var nonSelectedOptions = $('#company-select option').filter(function() {
+                            return !$(this).is(':selected');
+                        });
+    
+                        nonSelectedOptions.each(function() {
+                            var input = $('input[value="' + $(this).val() + '"]');
+                            input.prop('disabled', true);
+                            input.parent('li').addClass('disabled');
+                        });
+                    }
+                    else {
+                        // Enable all checkboxes.
+                        $('#company-select option').each(function() {
+                            var input = $('input[value="' + $(this).val() + '"]');
+                            input.prop('disabled', false);
+                            input.parent('li').addClass('disabled');
+                        });
+                    }
+                }
+            });
+        });
+
+        // NOTE: currently cannot use computeallratios on multiple companies?
+        // NOTE2: please integrate DB, frontend API uses AlphaVantage but the backend DB uses FinnHubb
+        // get data of selected companies
+        $("#get-company-data").on("click", async function(){
+            $("#results-container").empty();
+
+            // NOTE: for future integration
+            // var selectedOptions = $('#company-select option:selected').map(function(){
+            //     return $(this).val();
+            // });
+            // console.log(selectedOptions.toArray())
+    
+            var table = await constructRatioTable();
+            $("#results-container").append(table);
+        })
+
+        $("#clear-selection").on("click", function(){
+            $("#company-select").multiselect('deselectAll');
+            $("#results-container").empty();
+        })
+
+        // TO-DO: set up chart container
+        // $(document).ready(function(){
+        //     renderchart("IBM");
+        // })
 
     </script>
 </body>

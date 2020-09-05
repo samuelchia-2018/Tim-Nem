@@ -1,12 +1,14 @@
 async function getcompanybalancesheetjsondata(companyname){
-    var serviceURL = "https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=" + companyname+"&apikey=NBKV8YLSSH92V2LU";
+    // var serviceURL = "https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=" + companyname+"&apikey=NBKV8YLSSH92V2LU";
+    var serviceURL = "https://www.alphavantage.co/query?function=BALANCE_SHEET&symbol=" + companyname+"&apikey=164GD01KSMX23URK";
     var companyfinancialdatajson = await fetch(serviceURL, {method: 'GET'});
     var data = await companyfinancialdatajson.json();
     return data;
 }
 
 async function getcompanyincomestatementjsondata(companyname){
-    var serviceURL = "https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=" + companyname+"&apikey=NBKV8YLSSH92V2LU";
+    // var serviceURL = "https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=" + companyname+"&apikey=NBKV8YLSSH92V2LU";
+    var serviceURL = "https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=" + companyname+"&apikey=164GD01KSMX23URK";
     var companyfinancialdatajson = await fetch(serviceURL, {method: 'GET'});
     var data = await companyfinancialdatajson.json();
     return data;
@@ -154,6 +156,9 @@ async function getCOGS(companyname, income_statement){
     //var annual_reports = await income_statement.annualReports;
     var annual_reports = income_statement.annualReports;
     var all_COGS = [];
+    if (annual_reports == undefined) {
+        return null;
+    }
     for(var i=0; i<annual_reports.length; i++){
         if(annual_reports[i].costOfRevenue != null){
             all_COGS.push(annual_reports[i].costOfRevenue);
@@ -169,6 +174,9 @@ async function gettotaloperatingexpense(companyname, income_statement){
     //var annual_reports = await income_statement.annualReports;
     var annual_reports = income_statement.annualReports;
     var all_total_operating_expense = [];
+    if (annual_reports == undefined) {
+        return null;
+    }
     for(var i=0; i<annual_reports.length; i++){
         if(annual_reports[i].totalOperatingExpense != null){
             all_total_operating_expense.push(annual_reports[i].totalOperatingExpense);
@@ -182,6 +190,9 @@ async function getebit(companyname, income_statement){
     //var annual_reports = await income_statement.annualReports;
     var annual_reports = income_statement.annualReports;
     var all_ebit = [];
+    if (annual_reports == undefined) {
+        return null;
+    }
     for(var i=0; i<annual_reports.length; i++){
         if(annual_reports[i].ebit != null){
             all_ebit.push(annual_reports[i].ebit);
@@ -195,6 +206,9 @@ async function getInterest(companyname, income_statement){
     //var annual_reports = await income_statement.annualReports;
     var annual_reports = income_statement.annualReports;
     var all_interest_expense = [];
+    if (annual_reports == undefined) {
+        return null;
+    }
     for(var i=0; i<annual_reports.length; i++){
         if(annual_reports[i].interestExpense != null){
             all_interest_expense.push(annual_reports[i].interestExpense);
@@ -208,6 +222,9 @@ async function getrevenue(companyname, income_statement){
     //var annual_reports = await income_statement.annualReports;
     var annual_reports = income_statement.annualReports;
     var all_revenue = [];
+    if (annual_reports == undefined) {
+        return null;
+    }
     for(var i=0; i<annual_reports.length; i++){
         if(annual_reports[i].totalRevenue != null){
             all_revenue.push(annual_reports[i].totalRevenue);
@@ -219,6 +236,9 @@ async function getrevenue(companyname, income_statement){
 async function getnetincome(companyname, income_statement){
     var annual_reports = income_statement.annualReports;
     var all_net_income = [];
+    if (annual_reports == undefined) {
+        return null;
+    }
     for (var i =0; i< annual_reports.length; i++){
         if(annual_reports[i].netIncome != null){
             all_net_income.push(annual_reports[i].netIncome);
@@ -504,7 +524,12 @@ async function NWCturnover(companyname, income_statement, balance_sheet){
     var all_revenue = await getrevenue(companyname, income_statement);
     var NWCturnovercomputed = [];
     for (i =0; i < NWCs.length; i++){
-        NWCturnovercomputed.push(Number(all_revenue[i])/ Number(NWCs[i]));
+        try{
+            NWCturnovercomputed.push(Number(all_revenue[i])/ Number(NWCs[i]));
+        } catch {
+            NWCturnovercomputed.push("Cannot be calculated");
+        }
+        
     }
     return NWCturnovercomputed;
 }
@@ -573,7 +598,8 @@ async function roe(companyname, income_statement, balance_sheet){
 
 
 async function getstockprices2(companyname){
-    var serviceURL = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + companyname + '&apikey=NBKV8YLSSH92V2LU';
+    // var serviceURL = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + companyname + '&apikey=NBKV8YLSSH92V2LU';
+    var serviceURL = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + companyname + '&apikey=164GD01KSMX23URK';
     //console.log(serviceURL);
     var response = await fetch(serviceURL);
     //console.log(response);
@@ -596,7 +622,8 @@ async function getstockprices2(companyname){
 }
 
 async function getEPS(companyname){
-    var serviceURL = 'https://www.alphavantage.co/query?function=OVERVIEW&symbol=' + companyname + '&apikey=NBKV8YLSSH92V2LU';
+    // var serviceURL = 'https://www.alphavantage.co/query?function=OVERVIEW&symbol=' + companyname + '&apikey=NBKV8YLSSH92V2LU';
+    var serviceURL = 'https://www.alphavantage.co/query?function=OVERVIEW&symbol=' + companyname + '&apikey=SA4ZNST85AZA41KN';
     //console.log(serviceURL);
     var response = await fetch(serviceURL);
     var data = await response.json();
@@ -682,7 +709,7 @@ async function computeallratios(companyname){
 
     //market value measures here
     var peratios = await PEratio(companyname);
-    var MTB = await marketobookratio(companyname, balance_sheet_data);
+    // var MTB = await marketobookratio(companyname, balance_sheet_data);
 
     var finaldata = {
         "CurrentRatio" : currentratios,
@@ -704,10 +731,88 @@ async function computeallratios(companyname){
         "NetProfitMargin": netprofitmargins,
         "ReturnOnAsset": roas,
         "ReturnOnEquity": roes,
-        "PriceEquityRatio": peratios,
-        "MarketToBookRatio": MTB
+        "PriceEquityRatio": peratios
+        // "MarketToBookRatio": MTB
     };
 
     console.log(finaldata);
     return finaldata;
+}
+
+function initRatioNamesAndDesc() {
+    var ratioInfo = {
+        "CurrentRatio": ["Current Ratio", "Can the company cover its short term liabilities? Gives an idea of the short-term liquidity of the company."],
+        "QuickRatio": ["Quick Ratio", "Quick ratio is current ratio but without taking into account inventory. Inventory might inflate values for retail companies/food companies."],
+        "NWCtoTotalAsset": ["NWC to Total Asset", "Alternative way to measure short term liquidity."],
+        "IntervalMeasure": ["Interval Measure", "How long the company can cover its operations based on its current assets."],
+        "TotalDebtRatio": ["Total Debt Ratio", "Debt compared to assets."],
+        "EquityMultiplier": ["Equity Multiplier", "1 + debt/equity ratio. Tells you the company's capital structure."],
+        "InterestCoverage": ["Interest Coverage", "placeholder"],
+        "InventoryTurnover": ["Inventory Turnover", "Tells you how many times the company sold (turned over) its inventory."],
+        "DaysSalesInInventory": ["Days Sales In Inventory", "Number of days it took to sell inventory."],
+        "ReceivablesTurnover": ["Receivables Turnover", "How many times the company collects its Accounts Receivables"],
+        "DaysSalesInReceivables": ["Days Sales In Receivables", "How many days it takes to collect Accounts Receivables. You want this to be lower."],
+        "PayableTurnovers": ["Payable Turnovers", "How many times the company pays its AP in a year."],
+        "DaysPayableOutstanding": ["Days Payable Outstanding", "How many days it takes for the company to pay its suppliers. You want this to be higher."],
+        "TotalAssetTurnover": ["Total Asset Turnover", "placeholder"],
+        "NWCTurnover": ["NWC Turnover", "placeholder"],
+        "FixedAssetTurnover": ["Fixed Asset Turnover", "placeholder"],
+        "NetProfitMargin": ["Net Profit Margin", "placeholder"],
+        "ReturnOnAsset": ["Return On Asset", "placeholder"],
+        "ReturnOnEquity": ["Return On Equity", "placeholder"],
+        "PriceEquityRatio": ["Price Equity Ratio", "placeholder"],
+        "MarketToBookRatio": ["Market To Book Ratio", "placeholder"]
+    };
+    return ratioInfo;
+}
+
+
+async function constructRatioTable(companyList=['IBM', 'AAPL']){
+    const ratioInfo = initRatioNamesAndDesc();
+    var data = {};
+
+    htmlStr = `<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th></th>`;
+    
+    for (const companySymbol of companyList) {
+        var companyData = await computeallratios(companySymbol);
+        data[companySymbol] = companyData;
+        // companyJSON = await getCompanyBySymbol(companySymbol);
+        htmlStr += `<th>${companySymbol}</th>`;
+        // htmlStr += `<th>${companyJSON.name}</th>`;
+    }
+
+    console.log(data);
+
+    htmlStr += `</tr></thead>`;
+    
+    Object.keys(ratioInfo).forEach(stat => {
+        var statName = ratioInfo[stat][0];
+        var statDesc = ratioInfo[stat][1];
+        var popoverElement = createDescPopover(statDesc);
+        htmlStr += `<tr><th>${statName} ${popoverElement}</th>`;
+        companyList.forEach(symbol => {
+            var value = data[symbol][stat];
+            if (value == undefined || value == null){
+                value = "Not found";
+            } else if (typeof(value) == 'number'){
+                value = value.toFixed(5);
+            }
+            htmlStr += `<td>${data[symbol][stat]}</td>`;
+            
+        })
+        htmlStr += "</tr>";
+    })
+
+    htmlStr += "</table>";
+
+    return htmlStr;
+}
+
+function createDescPopover(description){
+    var popover = `<i class="far fa-question-circle"
+    data-toggle="tooltip" data-placement="right" title="${description}"></i>`;
+    return popover;
 }
