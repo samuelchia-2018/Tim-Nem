@@ -747,7 +747,7 @@ function initRatioNamesAndDesc() {
         "IntervalMeasure": ["Interval Measure", "How long the company can cover its operations based on its current assets."],
         "TotalDebtRatio": ["Total Debt Ratio", "Debt compared to assets."],
         "EquityMultiplier": ["Equity Multiplier", "1 + debt/equity ratio. Tells you the company's capital structure."],
-        "InterestCoverage": ["Interest Coverage", "placeholder"],
+        "InterestCoverage": ["Interest Coverage", "How much the firm can cover the interest using its Earnings (EBIT)"],
         "InventoryTurnover": ["Inventory Turnover", "Tells you how many times the company sold (turned over) its inventory."],
         "DaysSalesInInventory": ["Days Sales In Inventory", "Number of days it took to sell inventory."],
         "ReceivablesTurnover": ["Receivables Turnover", "How many times the company collects its Accounts Receivables"],
