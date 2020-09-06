@@ -173,7 +173,7 @@
             var updateStockChart = true;
 
             var currentlySelected = JSON.parse(window.localStorage.getItem("currentlySelected"));
-            var numSelected = JSON.parse(window.localStorage.getItem("numSelected"));
+            var numSelected = parseInt(window.localStorage.getItem("numSelected"));
 
             if (numSelected == 5) {
                 alert("You've reached the maximum of 5 columns, clear the selection to compare companies again!");
@@ -197,6 +197,8 @@
                 if (updateStockChart) updateChart(selectedCompany);
 
                 window.localStorage.setItem("currentlySelected", JSON.stringify(currentlySelected));
+                numSelected += 1;
+                window.localStorage.setItem("numSelected", numSelected.toString());
             }
             $("#get-company-data").attr("disabled", true);
             setTimeout(enableBtn, 60000);
