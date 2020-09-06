@@ -66,7 +66,7 @@ class CompanyController extends Controller
     public function getCompaniesBySymbol($symbol) {
         if (Company::where('symbol', $symbol)->exists()) {
             $company = Company::where('symbol', $symbol)->get();
-            return response()->json($company, 200);
+            return response()->json($company[0], 200);
         } else {
             return response()->json([
                 'message' => 'company not found',
