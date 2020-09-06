@@ -643,7 +643,7 @@ async function PEratio(companyname){
 }
 
 async function marketobookratio(companyname, balance_sheet){
-    var serviceURL = "http://127.0.0.1:9000/getmarketcap/" + companyname;
+    var serviceURL = "http://ec2-52-77-240-117.ap-southeast-1.compute.amazonaws.com:9000/getmarketcap/" + companyname;
     var response = await fetch(serviceURL);
     var data = await response.json();
     var marketcap = data.Marketcapvalue;
@@ -790,13 +790,23 @@ function initRatioTable(){
     return htmlStr;
 }
 
+async function getCompanyBySymbol(symbol) {
+    var timNemURL = `http://timnem.tk/api/companies/symbol/${symbol}`;
+    var companyJSON = await fetch(timNemURL, {method: "GET"});
+    var data = await companyJSON.json();
+    return data;
+}
+
 // adds new column to table
 async function updateRatioTable(companySymbol) {
     const ratioInfo = initRatioNamesAndDesc();
 
     var companyData = await computeallratios(companySymbol);
 
-    $("#company-names").append(`<th>${companySymbol}</th>`);
+    var companyInfo = await getCompanyBySymbol(companySymbol);
+    console.log(companyInfo);
+
+    $("#company-names").append(`<th>${companyInfo.name} (${companySymbol})</th>`);
     
     Object.keys(ratioInfo).forEach(stat => {
         var value = companyData[stat];

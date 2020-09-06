@@ -38,4 +38,3 @@ $(document).on('click','#searchbtn',function(){
     localStorage.setItem('selectedIndustry',selectedIndustry);
     window.location.href='./search.html';
 });
-
