@@ -754,14 +754,14 @@ function initRatioNamesAndDesc() {
         "DaysSalesInReceivables": ["Days Sales In Receivables", "How many days it takes to collect Accounts Receivables. You want this to be lower."],
         "PayableTurnovers": ["Payable Turnovers", "How many times the company pays its AP in a year."],
         "DaysPayableOutstanding": ["Days Payable Outstanding", "How many days it takes for the company to pay its suppliers. You want this to be higher."],
-        "TotalAssetTurnover": ["Total Asset Turnover", "placeholder"],
-        "NWCTurnover": ["NWC Turnover", "placeholder"],
-        "FixedAssetTurnover": ["Fixed Asset Turnover", "placeholder"],
-        "NetProfitMargin": ["Net Profit Margin", "placeholder"],
-        "ReturnOnAsset": ["Return On Asset", "placeholder"],
-        "ReturnOnEquity": ["Return On Equity", "placeholder"],
-        "PriceEquityRatio": ["Price Equity Ratio", "placeholder"],
-        "MarketToBookRatio": ["Market To Book Ratio", "placeholder"]
+        "TotalAssetTurnover": ["Total Asset Turnover", "How much $ sales each dollar of Total asset generates"],
+        "NWCTurnover": ["NWC Turnover", "How well the company manages its Net Working Capital (Current Assets - Current Liabilites)"],
+        "FixedAssetTurnover": ["Fixed Asset Turnover", "How much $ sales each dollar of Fixed asset generates"],
+        "NetProfitMargin": ["Net Profit Margin", "How much of sales the company makes as income"],
+        "ReturnOnAsset": ["Return On Asset", "Returns to investors/investment"],
+        "ReturnOnEquity": ["Return On Equity", "Returns to shareholders. Will be higher than ROA if the company has debt."],
+        "PriceEquityRatio": ["Price Equity Ratio", "Measures how much investors price each $ of the firm's earnings. E.G. investors willing to pay $5 for each $1 the firm makes"],
+        "MarketToBookRatio": ["Market To Book Ratio", "Market value of the company/Book value of the company. Shows how much investors value the compay (Overvalue or undervalue)"]
     };
     return ratioInfo;
 }
