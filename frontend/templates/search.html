@@ -208,8 +208,9 @@
             $("#company-select").multiselect('deselectAll');
             $("#results-container").empty();
             $("#chartContainer").empty();
-            window.localStorage.removeItem("dataPoints");
-            window.localStorage.removeItem("currentlySelected");
+            window.localStorage.setItem("dataPoints",JSON.stringify({}));
+            window.localStorage.setItem("currentlySelected", JSON.stringify({}));
+            window.localStorage.setItem("numSelected","0");
         })
 
     </script>
