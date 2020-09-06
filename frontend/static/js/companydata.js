@@ -790,13 +790,23 @@ function initRatioTable(){
     return htmlStr;
 }
 
+async function getCompanyBySymbol(symbol) {
+    var timNemURL = `http://timnem.tk/api/companies/symbol/${symbol}`;
+    var companyJSON = await fetch(timNemURL, {method: "GET"});
+    var data = await companyJSON.json();
+    return data;
+}
+
 // adds new column to table
 async function updateRatioTable(companySymbol) {
     const ratioInfo = initRatioNamesAndDesc();
 
     var companyData = await computeallratios(companySymbol);
 
-    $("#company-names").append(`<th>${companySymbol}</th>`);
+    var companyInfo = await getCompanyBySymbol(companySymbol);
+    console.log(companyInfo);
+
+    $("#company-names").append(`<th>${companyInfo.name} (${companySymbol})</th>`);
     
     Object.keys(ratioInfo).forEach(stat => {
         var value = companyData[stat];
