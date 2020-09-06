@@ -643,7 +643,7 @@ async function PEratio(companyname){
 }
 
 async function marketobookratio(companyname, balance_sheet){
-    var serviceURL = "http://127.0.0.1:9000/getmarketcap/" + companyname;
+    var serviceURL = "http://ec2-52-77-240-117.ap-southeast-1.compute.amazonaws.com:9000/getmarketcap/" + companyname;
     var response = await fetch(serviceURL);
     var data = await response.json();
     var marketcap = data.Marketcapvalue;
