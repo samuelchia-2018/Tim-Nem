@@ -211,6 +211,10 @@
             window.localStorage.setItem("dataPoints",JSON.stringify({}));
             window.localStorage.setItem("currentlySelected", JSON.stringify({}));
             window.localStorage.setItem("numSelected","0");
+            var table = initRatioTable();
+            console.log(table);
+            $("#results-container").append(table);
+            $("#data-container").hide();
         })
 
     </script>
