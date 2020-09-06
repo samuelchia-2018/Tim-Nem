@@ -36,5 +36,5 @@ async function getCompaniesByIndustry(industry) {
 $(document).on('click','#searchbtn',function(){
     var selectedIndustry = $("#searchMenu").val();
     localStorage.setItem('selectedIndustry',selectedIndustry);
-    window.location.href='./search.html';
+    window.location.href='./search';
 });
