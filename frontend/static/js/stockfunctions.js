@@ -100,12 +100,28 @@ async function renderchartMultiple(companynameList){
   return "done";
 }
 
+function parsedata(datapoints){
+  //gets a list of string formatted json data and converts into the correct form
+  var toreturn = [];
+  for(i=0; i<datapoints.length; i++){
+    var xdata = datapoints[i].x;
+    var ydata = datapoints[i].y;
+    var xdataformatted = new Date(xdata);
+    var ydataformatted = Number(ydata);
+    toreturn.push(
+      {x: xdataformatted,
+      y: ydataformatted}
+    );
+  }
+  return toreturn;
+}
+
 // gets data points for newly added company, then renders charts from localStorage
 async function updateChart(newCompanyName){
   var existingData = JSON.parse(localStorage.getItem("dataPoints"));
   console.log(existingData);
 
-  if(existingData == null) existingData = {};
+  if(existingData == null){existingData = {};}
   existingData[newCompanyName] = await getstockprices(newCompanyName);
   window.localStorage.setItem("dataPoints", JSON.stringify(existingData));
 
@@ -114,7 +130,9 @@ async function updateChart(newCompanyName){
 
   for (const companyname in existingData){
     var datapoints = existingData[companyname];
-    datapointsList.push(datapoints);
+    //console.log(datapoints);
+    var parseddata = parsedata(datapoints);
+    datapointsList.push(parseddata);
     companynameList.push(companyname);
   }
   console.log(datapointsList)
