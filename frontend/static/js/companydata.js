@@ -31,7 +31,7 @@ async function getcurrentassets(companyname, balance_sheet){
 
 async function getcurrentliabilites(companyname, balance_sheet){
     //var balance_sheet = await getcompanybalancesheetjsondata(companyname);
-    console.log(balance_sheet);
+    // console.log(balance_sheet);
     //var annual_reports = await balance_sheet.annualReports;
     var annual_reports = balance_sheet.annualReports;
     var all_current_liabilities = [];
@@ -334,7 +334,7 @@ async function intervalMeasure(companyname, income_statement){
     var intervalMeasurecomputed = [];
     if (COGS != null && operatingexpenses != null){
         for(i=0; i< COGS.length; i++){
-            console.log((Number(COGS[i]) + Number(operatingexpenses[i])));
+            // console.log((Number(COGS[i]) + Number(operatingexpenses[i])));
             intervalMeasurecomputed.push((Number(COGS[i]) + Number(operatingexpenses[i]))/365);
         }
         return intervalMeasurecomputed;
@@ -628,7 +628,7 @@ async function getEPS(companyname){
     var response = await fetch(serviceURL);
     var data = await response.json();
     var eps = await data.EPS;
-    console.log(eps);
+    // console.log(eps);
     return eps;
 }
 
@@ -648,8 +648,8 @@ async function marketobookratio(companyname, balance_sheet){
     var data = await response.json();
     var marketcap = data.Marketcapvalue;
     var totalequity = await gettotalequity(companyname, balance_sheet);
-    console.log(marketcap);
-    console.log(totalequity[0]);
+    // console.log(marketcap);
+    // console.log(totalequity[0]);
     var equitynow = totalequity[0];
     
     var currentmarkettobookratio = Number(marketcap) / Number(equitynow);
@@ -666,9 +666,9 @@ async function marketobookratio(companyname, balance_sheet){
 
 async function computeallratios(companyname){
     var balance_sheet_data = await getcompanybalancesheetjsondata(companyname);
-    console.log(balance_sheet_data);
+    // console.log(balance_sheet_data);
     var income_statement_data = await getcompanyincomestatementjsondata(companyname);
-    console.log(income_statement_data);
+    // console.log(income_statement_data);
     //liquidity ratios here
     var currentratios = await currentratio(companyname, balance_sheet_data);
     var quickratios = await quickratio(companyname, balance_sheet_data);
@@ -766,14 +766,75 @@ function initRatioNamesAndDesc() {
     return ratioInfo;
 }
 
+// initialize blank table with headers
+function initRatioTable(){
+    const ratioInfo = initRatioNamesAndDesc();
+    var data = {};
 
+    htmlStr = `<table class="table">
+    <thead class="thead-dark">
+        <tr id="company-names">
+            <th></th>
+        </tr>
+    </thead>`;
+        
+    Object.keys(ratioInfo).forEach(stat => {
+        var statName = ratioInfo[stat][0];
+        var statDesc = ratioInfo[stat][1];
+        var popoverElement = createDescPopover(statDesc);
+        htmlStr += `<tr id="${stat}"><th>${statName} ${popoverElement}</th></tr>`;
+    })
+
+    htmlStr += "</table>";
+    // console.log(htmlStr);
+    return htmlStr;
+}
+
+// adds new column to table
+async function updateRatioTable(companySymbol) {
+    const ratioInfo = initRatioNamesAndDesc();
+
+    var companyData = await computeallratios(companySymbol);
+
+    $("#company-names").append(`<th>${companySymbol}</th>`);
+    
+    Object.keys(ratioInfo).forEach(stat => {
+        var value = companyData[stat];
+        var htmlStr = "";
+
+        if (value == undefined || value == null){
+            value = "Not found";
+            htmlStr += '<td>' + String(value) + "</td>";
+        } else if (typeof(value) == 'number'){
+            value = value.toFixed(5);
+            htmlStr += '<td>' + String(value) + "</td>";
+        } else if (Array.isArray(value) == true){
+            var currentnumber = Number(value[0]); //getting the first "ratio" in the list for now. Can change from [0] (most current year) according to the year you want. E.G. [1] will be the previous year.
+            htmlStr += '<td>' + String(currentnumber.toFixed(5)) + "</td>";
+        }
+
+        $(`#${stat}`).append(htmlStr);
+    })
+    return "done updating table";
+}
+
+function createDescPopover(description){
+    var popover = `<i class="far fa-question-circle"
+    data-toggle="tooltip" data-placement="right" title="${description}"></i>`;
+    return popover;
+}
+
+
+
+
+// ignore this function please
 async function constructRatioTable(companyList=['IBM', 'AAPL']){
     const ratioInfo = initRatioNamesAndDesc();
     var data = {};
 
     htmlStr = `<table class="table">
     <thead class="thead-dark">
-        <tr>
+        <tr id="company-names">
             <th></th>`;
     
     for (const companySymbol of companyList) {
@@ -792,7 +853,7 @@ async function constructRatioTable(companyList=['IBM', 'AAPL']){
         var statName = ratioInfo[stat][0];
         var statDesc = ratioInfo[stat][1];
         var popoverElement = createDescPopover(statDesc);
-        htmlStr += `<tr><th>${statName} ${popoverElement}</th>`;
+        htmlStr += `<tr id="${stat}"><th>${statName} ${popoverElement}</th>`;
         companyList.forEach(symbol => {
             var value = data[symbol][stat];
             //console.log(value);
@@ -817,12 +878,6 @@ async function constructRatioTable(companyList=['IBM', 'AAPL']){
     })
 
     htmlStr += "</table>";
-    console.log(htmlStr);
+    // console.log(htmlStr);
     return htmlStr;
-}
-
-function createDescPopover(description){
-    var popover = `<i class="far fa-question-circle"
-    data-toggle="tooltip" data-placement="right" title="${description}"></i>`;
-    return popover;
 }

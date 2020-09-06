@@ -68,15 +68,16 @@
                 <div id="results">
                     <h3 class="barlow" style="color:#00705c"><b id="result-header"></b></h3><br>
                     <div id="company-select-container" style="display:none;">
-                        <select id="company-select" multiple></select>
-                        <button class="btn btn-secondary action barlow" id="get-company-data">Get Company Data</button>
+                        <select id="company-select"></select>
+                        <button class="btn btn-secondary action barlow" id="get-company-data">Add Company</button>
                         <button class="btn btn-secondary action barlow" id="clear-selection">Clear Selection</button>
                     </div>
-                    <div class="card-container" id="results-container">
+                    <div id="data-container" style="display:none;">
+                        <div id="results-container"></div>
+                        <div id="chartContainer" style="height: 450px; width: 100%;"></div>
                     </div>
                 </div>
             </div>
-            <div id="chartContainer" style="height: 450px; width: 100%;"></div>
         </div>
     </div>
     <script type="text/javascript" src="../static/js/companydata.js"></script>
@@ -100,90 +101,98 @@
         })
 
         // set up search bar and search results
-        $(document).ready(async function(){
-            var selectedIndustry = window.localStorage.getItem("selectedIndustry");
-            var industries = await getAllIndustries();
 
-            industries.forEach(industryJSON => {
-                var option = `<option value="${industryJSON.name}"`;
-                if (industryJSON.name == selectedIndustry){
-                    option += " selected";
-                }
-                option += `>${industryJSON.name}</option>`;
-                $("#searchMenu").append(option)
-            });
+        $(document).ready(function() {
+            var testCompanies = ["IBM", "AAPL", "GS"];
+            $("#company-select-container").show();
+            testCompanies.forEach(companyname => {
+                $("#company-select").append(`<option value=${companyname}>${companyname}</option>`);
+            })
+            $("#company-select").multiselect("rebuild");
+            var table = initRatioTable();
+            console.log(table);
+            $("#results-container").append(table);
 
-            var companies = await getCompaniesByIndustry(selectedIndustry);
-            if (companies.length == 0) {
-                $("#results").append(`<h4 class='barlow'>No company data available for the ${selectedIndustry} industry.</h4>`);
-            } else {
-                $("#company-select-container").show();
-                companies.forEach(companyJSON => {
-                    $("#company-select").append(`<option value=${companyJSON.symbol}>${companyJSON.name}</option>`);
-                })
-                $("#company-select").multiselect("rebuild");
-            }
-        })
+            if (window.localStorage.getItem("dataPoints") != null) window.localStorage.removeItem("dataPoints");
+            if (window.localStorage.getItem("currentlySelected") != null) window.localStorage.removeItem("currentlySelected");
+        });
+
+
+        // DO NOT REMOVE: for future integration
+        // $(document).ready(async function(){
+            // var selectedIndustry = window.localStorage.getItem("selectedIndustry");
+            // var industries = await getAllIndustries();
+
+            // industries.forEach(industryJSON => {
+            //     var option = `<option value="${industryJSON.name}"`;
+            //     if (industryJSON.name == selectedIndustry){
+            //         option += " selected";
+            //     }
+            //     option += `>${industryJSON.name}</option>`;
+            //     $("#searchMenu").append(option)
+            // });
+
+            // var companies = await getCompaniesByIndustry(selectedIndustry);
+            // if (companies.length == 0) {
+            //     $("#results").append(`<h4 class='barlow'>No company data available for the ${selectedIndustry} industry.</h4>`);
+            // } else {
+            //     $("#company-select-container").show();
+            //     companies.forEach(companyJSON => {
+            //         $("#company-select").append(`<option value=${companyJSON.symbol}>${companyJSON.name}</option>`);
+            //     })
+            //     $("#company-select").multiselect("rebuild");
+            // }
+
+
+            // hard-coded companies for testing
+        //     var table = initRatioTable();
+        //     console.log(table);
+        //     $("results-container").append(table);
+        // })
 
         // setup and config for multiselect input
         $(document).ready(function() {
             $('#company-select').multiselect({
                 maxHeight: 200,
                 buttonWidth: '500px',
-                nonSelectedText: "Select some companies!",
-                onChange: function(option, checked) {
-                    // Get selected options.
-                    var selectedOptions = $('#company-select option:selected');
-    
-                    if (selectedOptions.length >= 5) {
-                        // Disable all other checkboxes.
-                        var nonSelectedOptions = $('#company-select option').filter(function() {
-                            return !$(this).is(':selected');
-                        });
-    
-                        nonSelectedOptions.each(function() {
-                            var input = $('input[value="' + $(this).val() + '"]');
-                            input.prop('disabled', true);
-                            input.parent('li').addClass('disabled');
-                        });
-                    }
-                    else {
-                        // Enable all checkboxes.
-                        $('#company-select option').each(function() {
-                            var input = $('input[value="' + $(this).val() + '"]');
-                            input.prop('disabled', false);
-                            input.parent('li').addClass('disabled');
-                        });
-                    }
-                }
+                nonSelectedText: "Select some companies!"
             });
         });
 
-        // NOTE: currently cannot use computeallratios on multiple companies?
-        // NOTE2: please integrate DB, frontend API uses AlphaVantage but the backend DB uses FinnHubb
         // get data of selected companies
         $("#get-company-data").on("click", async function(){
-            $("#results-container").empty();
-
             // NOTE: for future integration
             // var selectedOptions = $('#company-select option:selected').map(function(){
             //     return $(this).val();
             // });
             // console.log(selectedOptions.toArray())
-    
-            var table = await constructRatioTable();
-            $("#results-container").append(table);
+            var selectedCompany = $('#company-select option:selected').val();
+
+            var currentlySelected = JSON.parse(window.localStorage.getItem("currentlySelected"));
+            if (currentlySelected == null) currentlySelected = [];
+            if (currentlySelected.length == 5) {
+                alert("You already selected 5 companies, clear the selection to compare companies again!");
+            } else {
+                currentlySelected.push(selectedCompany);
+
+                var response = await updateRatioTable(selectedCompany);
+                // $("#results-container").append(htmlStr);
+                console.log(response);
+                $("#data-container").show();
+
+                updateChart(selectedCompany);
+            }
+            
+            // renderchartMultiple(['IBM', 'AAPL']);
         })
 
         $("#clear-selection").on("click", function(){
             $("#company-select").multiselect('deselectAll');
             $("#results-container").empty();
+            $("#chartContainer").empty();
+            window.localStorage.removeItem("dataPoints");
+            window.localStorage.removeItem("currentlySelected");
         })
-
-        // TO-DO: set up chart container
-        // $(document).ready(function(){
-        //     renderchart("IBM");
-        // })
 
     </script>
 </body>

@@ -1,12 +1,12 @@
 async function getstockprices(companyname){
-    var serviceURL = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=' + companyname + '&apikey=NBKV8YLSSH92V2LU';
+    var serviceURL = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=' + companyname + '&apikey=37436FGP8LLLWSH3';
     //console.log(serviceURL);
     var response = await fetch(serviceURL);
-    //console.log(response);
+    // console.log(response);
     var data = await response.json();
-    //console.log(data);
+    // console.log(data);
     var timeSeriesData = data['Time Series (Daily)'];
-    //console.log(timeSeriesData);
+    // console.log(timeSeriesData);
     var keys = [];
     for (var key in timeSeriesData){
         keys.push(new Date(key));
@@ -22,7 +22,7 @@ async function getstockprices(companyname){
     for(i=0; i<keys.length; i++){
         toreturn.push({x:keys[i], y: Number(close[i])});
     }
-    console.log(toreturn);
+    // console.log(toreturn);
     return toreturn;
 }
 
@@ -37,7 +37,7 @@ function getstockchart(datapoints, companyname){
       },      
       data: [{        
         type: "line", //Change it to "spline", "area", "column"
-        name: "AAPL",
+        name: companyname,
         dataPoints : datapoints
       }]
     }],
@@ -97,4 +97,28 @@ async function renderchartMultiple(companynameList){
     datapointsList.push(datapoints);
   }
   getstockchartmultiple(datapointsList, companynameList);
+  return "done";
+}
+
+// gets data points for newly added company, then renders charts from localStorage
+async function updateChart(newCompanyName){
+  var existingData = JSON.parse(localStorage.getItem("dataPoints"));
+  console.log(existingData);
+
+  if(existingData == null) existingData = {};
+  existingData[newCompanyName] = await getstockprices(newCompanyName);
+  window.localStorage.setItem("dataPoints", JSON.stringify(existingData));
+
+  var datapointsList = [];
+  var companynameList = [];
+
+  for (const companyname in existingData){
+    var datapoints = existingData[companyname];
+    datapointsList.push(datapoints);
+    companynameList.push(companyname);
+  }
+  console.log(datapointsList)
+  console.log(companynameList);
+  getstockchartmultiple(datapointsList, companynameList);
+  return "done rendering chart";
 }
