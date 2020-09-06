@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Fonts -->
+    <link href='https://fonts.googleapis.com/css?family=Barlow Semi Condensed' rel='stylesheet'>
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/fontawesome.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/solid.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/regular.min.css" rel="stylesheet"/>
+
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js" integrity="sha512-aFvi2oPv3NjnjQv1Y/hmKD7RNMendo4CZ2DwQqMWzoURKxcqAoktj0nNG4LU8m23+Ws9X5uVDD4OXLqpUVXD5Q==" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css" integrity="sha512-EvvoSMXERW4Pe9LjDN9XDzHd66p8Z49gcrB7LCUplh0GcEHiV816gXGwIhir6PJiwl0ew8GFM2QaIg2TW02B9A==" crossorigin="anonymous" />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../static/css/style.css?v=1">
+
+    <!-- CanvasJS-->
+    <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.stock.min.js"></script>
+
+    <title>TimNem | Search</title>
+</head>
+
+<body>
+    <div class="container-fluid d-flex h-100 flex-column">
+        <div class="row">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-family: 'Barlow Semi Condensed';width: 100%;">
+                <div class="d-flex flex-grow-1">
+                    <span class="w-100 d-lg-none d-block"><!-- hidden spacer to center brand on mobile --></span>
+                    <a class="navbar-brand d-none d-lg-inline-block" href=".">
+                        <h2 style="display:inline;"><b>TIMNEM</b></h2>
+                    </a>
+                    <form class="form-inline mycustom">
+                        <div class="input-group mycustom" style="width:50%;">
+                            <select class="input-ol form-control" id="searchMenu" style="width:630px; border-radius:30px; font-family:'Barlow Semi Condensed';" aria-describedby="inputGroupPrepend2" placeholder="Search for industry...">
+                                <option disabled>Select an industry</option>
+                            </select>
+                            <br>
+                            <button class="btn btn-secondary action barlow" id="searchbtn">Get Companies</button>
+                        </div>
+                    </form>
+                    <div class="w-100 text-right">
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#myNavbar">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div id='workspace' class="row h-100 flex-grow-1" style="padding:10px; overflow:scroll;">
+            <div class="col-sm-12">
+                <br>
+                <div id="results">
+                    <h3 class="barlow" style="color:#00705c"><b id="result-header"></b></h3><br>
+                    <div id="company-select-container" style="display:none;">
+                        <select id="company-select"><option value="" selected disabled>Select a company!</option></select>
+                        <select id="year-select">
+                            <option value="" selected disabled>Select a year</option>
+                            <option value="2020">2020</option>
+                            <option value="2019">2019</option>
+                            <option value="2018">2018</option>
+                            <option value="2017">2017</option>
+                            <option value="2016">2016</option>
+                        </select>
+                        <button class="btn btn-secondary action barlow" id="get-company-data" data-toggle="tooltip"
+                        data-placement="bottom" title="Please wait 60 seconds between adding columns to accommodate the API calls!">Add Column</button>
+                        <button class="btn btn-secondary action barlow" id="clear-selection">Clear Selection</button>
+                        <br>
+                    </div>
+                    <div id="data-container" style="display:none;">
+                        <div id="results-container"></div>
+                        <div id="chartContainer" style="height: 450px; width: 100%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="../static/js/companydata.js"></script>
+    <script type="text/javascript" src="../static/js/stockfunctions.js"></script>
+    <script type="text/javascript" src="../static/js/functions.js"></script>
+    <script>
+        // toggles for bootstrap popups
+        $(document).ready(function(){
+            $('body').tooltip({
+                selector: '[data-toggle="tooltip"]'
+            });
+            $('body').popover({
+                html:true,
+                selector: '[data-toggle="popover"]'
+            });
+        });
+
+        // set results header
+        $(document).ready(function() {
+            $('#result-header').append("Showing companies for: " + localStorage.getItem('selectedIndustry'));
+        })
+
+        // set up search bar and search results
+
+        $(document).ready(async function(){
+            var selectedIndustry = window.localStorage.getItem("selectedIndustry");
+            var industries = await getAllIndustries();
+
+            industries.forEach(industryJSON => {
+                var option = `<option value="${industryJSON.name}"`;
+                if (industryJSON.name == selectedIndustry){
+                    option += " selected";
+                }
+                option += `>${industryJSON.name}</option>`;
+                $("#searchMenu").append(option)
+            });
+
+            var companies = await getCompaniesByIndustry(selectedIndustry);
+            if (companies.length == 0) {
+                $("#results").append(`<h4 class='barlow'>No company data available for the ${selectedIndustry} industry.</h4>`);
+            } else {
+                $("#company-select-container").show();
+                companies.forEach(companyJSON => {
+                    $("#company-select").append(`<option value=${companyJSON.symbol}>${companyJSON.name}</option>`);
+                })
+                $("#company-select").multiselect("rebuild");
+            }
+
+            var table = initRatioTable();
+            $("#results-container").append(table);
+
+            window.localStorage.setItem("dataPoints",JSON.stringify({}));
+            window.localStorage.setItem("currentlySelected", JSON.stringify({}));
+            window.localStorage.setItem("numSelected","0");
+        });
+
+
+        // setup and config for company-select input
+        $(document).ready(function() {
+            $('#company-select').multiselect({
+                maxHeight: 200,
+                buttonWidth: '500px',
+                nonSelectedText: "Select some companies!"
+            });
+        });
+
+        // setup and config for year-select input
+        $(document).ready(function() {
+            $('#year-select').multiselect({
+                maxHeight: 200,
+                buttonWidth: '150px',
+                nonSelectedText: "Select a year"
+            });
+        });
+
+        function enableBtn() {
+            $("#get-company-data").attr("disabled", false);
+        }
+
+        // get data of selected companies
+        $("#get-company-data").on("click", async function(){
+            var selectedCompany = $('#company-select option:selected').val();
+            var year = $("#year-select option:selected").val();
+
+            // validate selected values
+            if (selectedCompany=="" || year==""){
+                alert("Please select valid inputs!")
+                return false;
+            }
+            var updateStockChart = true;
+
+            var currentlySelected = JSON.parse(window.localStorage.getItem("currentlySelected"));
+            var numSelected = parseInt(window.localStorage.getItem("numSelected"));
+
+            if (numSelected == 5) {
+                alert("You've reached the maximum of 5 columns, clear the selection to compare companies again!");
+                return false;
+            }
+            if (!(selectedCompany in currentlySelected)) {
+                currentlySelected[selectedCompany] = [];
+            } else {
+                updateStockChart = false;
+            }
+
+            if (currentlySelected[selectedCompany].includes(year)) {
+                alert("You have already added this column");
+                return false;
+            } else {
+                currentlySelected[selectedCompany].push(year);
+
+                var response = await updateRatioTable(selectedCompany, year);
+                $("#data-container").show();
+
+                if (updateStockChart) updateChart(selectedCompany);
+
+                window.localStorage.setItem("currentlySelected", JSON.stringify(currentlySelected));
+                numSelected += 1;
+                window.localStorage.setItem("numSelected", numSelected.toString());
+            }
+            $("#get-company-data").attr("disabled", true);
+            setTimeout(enableBtn, 60000);
+        })
+
+        $("#clear-selection").on("click", function(){
+            $("#company-select").multiselect('deselectAll');
+            $("#results-container").empty();
+            $("#chartContainer").empty();
+            window.localStorage.removeItem("dataPoints");
+            window.localStorage.removeItem("currentlySelected");
+        })
+
+    </script>
+</body>
+
+
+
+</html>
