@@ -11,7 +11,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/regular.min.css" rel="stylesheet"/>
 
     <!-- JQuery -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
 
     <!-- Bootstrap & Material Icons -->
@@ -51,44 +51,23 @@
         <div class="col-sm-12 mx-auto text-center">
             <h1 style="color:#00705c; font-family:'Barlow Semi Condensed';"><b>Tim Nem</b></h1><br><br>
             <div class="input-group mx-auto mycustom" style="width:50%;">
-                <input type="text" class="input-ol form-control" name="query" id="searchbar" style="border-radius:30px; font-family:'Barlow Semi Condensed';" aria-describedby="inputGroupPrepend2" placeholder="Search for industry..." autocomplete="off"/>
-                <div class="input-group-prepend" style="padding-right: 5px;">
-                    <i class="fas fa-search action" id="searchbtn"></i>
-                </div>
+                <select class="input-ol form-control" id="searchMenu" style="width:630px; border-radius:30px; font-family:'Barlow Semi Condensed';" aria-describedby="inputGroupPrepend2" placeholder="Search for industry...">
+                    <option selected disabled>Select an industry</option>
+                </select>
+                <br>
+                <button class="btn btn-secondary action barlow" id="searchbtn">Get Companies</button>
               </div>
         </div>
     </div>
     </div>
-    <script>
-        $('.dropdown-menu a.dropdown-toggle').on('click', function(e) {
-            if (!$(this).next().hasClass('show')) {
-                $(this).parents('.dropdown-menu').first().find('.show').removeClass('show');
-            }
-            var $subMenu = $(this).next('.dropdown-menu');
-            $subMenu.toggleClass('show');
-
-
-            $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function(e) {
-                $('.dropdown-submenu .show').removeClass('show');
+    <script type="text/javascript" src="../static/js/functions.js"></script>
+    <script type="text/javascript">
+        $(document).ready(async function(){
+            var industries = await getAllIndustries();
+            industries.forEach(industryJSON => {
+                $("#searchMenu").append(`<option value="${industryJSON.name}">${industryJSON.name}</option>`);
             });
-
-
-            return false;
-        });
-
-        $(document).on('click','#searchbtn',function() {
-            var searchstr = encodeURI($("#searchbar").val());
-            var storage = window.sessionStorage;
-            storage.setItem('searchStr',searchstr);
-            console.log(searchstr);
-            window.location.href='./search.html?q='+searchstr;
-        });
-
-        $(document).on('keypress','#searchbar',function(e) {
-            if (e.keyCode==13){
-                $('#searchbtn').click()
-            }
-        });
+        })
     </script>
 </body>
 
