@@ -17,10 +17,10 @@ class CompanyController extends Controller
 
     public function refreshCompanies()
     {
-        ini_set('max_execution_time', 1800); //30 minutes
+        ini_set('max_execution_time', 0); //unlimited
         //Company::truncate();
         $client = new Client();
-        $res = $client->get('https://finnhub.io/api/v1/stock/symbol?token=bt8c4ef48v6oau6e4n5g&exchange=SI');
+        $res = $client->get('https://finnhub.io/api/v1/stock/symbol?token=bt8c4ef48v6oau6e4n5g&exchange=US');
         $array = json_decode($res->getBody()->getContents());
 
         // this is so we can bypass the 60/min api limit
@@ -39,13 +39,18 @@ class CompanyController extends Controller
             $sleepTimer++;
             $companyBigObj = json_decode($companyRes->getBody()->getContents());
             if(!isset($companyBigObj->name)){
-                continue;
+                $company->symbol = $companyObj->symbol;
+                $company->name = $companyObj->description;
+                $company->industry = "";
+                $company->logo = "";
+                $company->save();
+            }else {
+                $company->name = $companyBigObj->name;
+                $company->symbol = $companyObj->symbol;
+                $company->industry = $companyBigObj->finnhubIndustry;
+                $company->logo = $companyBigObj->logo;
+                $company->save();
             }
-            $company->name = $companyBigObj->name;
-            $company->symbol = $companyObj->symbol;
-            $company->industry = $companyBigObj->finnhubIndustry;
-            $company->logo = $companyBigObj->logo;
-            $company->save();
         }
         $this->refreshIndustries();
         return response()->json([
@@ -80,6 +85,7 @@ class CompanyController extends Controller
     }
 
     public function refreshIndustries() {
+        Industry::truncate();
         $companies = Company::all();
         foreach ($companies as $company) {
             if (Industry::where('name', $company->industry)->exists()) {
