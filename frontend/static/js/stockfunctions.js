@@ -119,9 +119,8 @@ function parsedata(datapoints){
 // gets data points for newly added company, then renders charts from localStorage
 async function updateChart(newCompanyName){
   var existingData = JSON.parse(localStorage.getItem("dataPoints"));
-  console.log(existingData);
+  // console.log(existingData);
 
-  if(existingData == null){existingData = {};}
   existingData[newCompanyName] = await getstockprices(newCompanyName);
   window.localStorage.setItem("dataPoints", JSON.stringify(existingData));
 

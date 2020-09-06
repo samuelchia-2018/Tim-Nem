@@ -61,9 +61,19 @@
                 <div id="results">
                     <h3 class="barlow" style="color:#00705c"><b id="result-header"></b></h3><br>
                     <div id="company-select-container" style="display:none;">
-                        <select id="company-select"></select>
-                        <button class="btn btn-secondary action barlow" id="get-company-data">Add Company</button>
+                        <select id="company-select"><option value="" selected disabled>Select a company!</option></select>
+                        <select id="year-select">
+                            <option value="" selected disabled>Select a year</option>
+                            <option value="2020">2020</option>
+                            <option value="2019">2019</option>
+                            <option value="2018">2018</option>
+                            <option value="2017">2017</option>
+                            <option value="2016">2016</option>
+                        </select>
+                        <button class="btn btn-secondary action barlow" id="get-company-data" data-toggle="tooltip"
+                        data-placement="bottom" title="Please wait 60 seconds between adding columns to accommodate the API calls!">Add Column</button>
                         <button class="btn btn-secondary action barlow" id="clear-selection">Clear Selection</button>
+                        <br>
                     </div>
                     <div id="data-container" style="display:none;">
                         <div id="results-container"></div>
@@ -122,17 +132,27 @@
             var table = initRatioTable();
             $("#results-container").append(table);
 
-            if (window.localStorage.getItem("dataPoints") != null) window.localStorage.removeItem("dataPoints");
-            if (window.localStorage.getItem("currentlySelected") != null) window.localStorage.removeItem("currentlySelected");
+            window.localStorage.setItem("dataPoints",JSON.stringify({}));
+            window.localStorage.setItem("currentlySelected", JSON.stringify({}));
+            window.localStorage.setItem("numSelected","0");
         });
 
 
-        // setup and config for multiselect input
+        // setup and config for company-select input
         $(document).ready(function() {
             $('#company-select').multiselect({
                 maxHeight: 200,
                 buttonWidth: '500px',
                 nonSelectedText: "Select some companies!"
+            });
+        });
+
+        // setup and config for year-select input
+        $(document).ready(function() {
+            $('#year-select').multiselect({
+                maxHeight: 200,
+                buttonWidth: '150px',
+                nonSelectedText: "Select a year"
             });
         });
 
@@ -143,20 +163,38 @@
         // get data of selected companies
         $("#get-company-data").on("click", async function(){
             var selectedCompany = $('#company-select option:selected').val();
+            var year = $("#year-select option:selected").val();
+
+            // validate selected values
+            if (selectedCompany=="" || year==""){
+                alert("Please select valid inputs!")
+                return false;
+            }
+            var updateStockChart = true;
 
             var currentlySelected = JSON.parse(window.localStorage.getItem("currentlySelected"));
-            if (currentlySelected == null) currentlySelected = [];
-            if (currentlySelected.length == 5) {
-                alert("You already selected 5 companies, clear the selection to compare companies again!");
-            } else {
-                currentlySelected.push(selectedCompany);
+            var numSelected = JSON.parse(window.localStorage.getItem("numSelected"));
 
-                var response = await updateRatioTable(selectedCompany);
-                // $("#results-container").append(htmlStr);
-                console.log(response);
+            if (numSelected == 5) {
+                alert("You've reached the maximum of 5 columns, clear the selection to compare companies again!");
+                return false;
+            }
+            if (!(selectedCompany in currentlySelected)) {
+                currentlySelected[selectedCompany] = [];
+            } else {
+                updateStockChart = false;
+            }
+
+            if (currentlySelected[selectedCompany].includes(year)) {
+                alert("You have already added this column");
+                return false;
+            } else {
+                currentlySelected[selectedCompany].push(year);
+
+                var response = await updateRatioTable(selectedCompany, year);
                 $("#data-container").show();
 
-                updateChart(selectedCompany);
+                if (updateStockChart) updateChart(selectedCompany);
 
                 window.localStorage.setItem("currentlySelected", JSON.stringify(currentlySelected));
             }

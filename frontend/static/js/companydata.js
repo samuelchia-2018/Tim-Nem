@@ -790,23 +790,31 @@ function initRatioTable(){
     return htmlStr;
 }
 
-async function getCompanyBySymbol(symbol) {
-    var timNemURL = `http://timnem.tk/api/companies/symbol/${symbol}`;
-    var companyJSON = await fetch(timNemURL, {method: "GET"});
-    var data = await companyJSON.json();
-    return data;
-}
-
 // adds new column to table
-async function updateRatioTable(companySymbol) {
+async function updateRatioTable(companySymbol, year) {
     const ratioInfo = initRatioNamesAndDesc();
 
     var companyData = await computeallratios(companySymbol);
 
     var companyInfo = await getCompanyBySymbol(companySymbol);
-    console.log(companyInfo);
+    // console.log(companyInfo);
 
-    $("#company-names").append(`<th>${companyInfo.name} (${companySymbol})</th>`);
+    $("#company-names").append(`<th>${companyInfo.name} (${companySymbol}), ${year}</th>`);
+
+    year_index = 0
+
+    switch(year){
+        case 2020:
+            year_index = 0;
+        case 2019:
+            year_index = 1;
+        case 2018:
+            year_index = 2;
+        case 2017:
+            year_index = 3;
+        case 2016:
+            year_index = 4;
+    }
     
     Object.keys(ratioInfo).forEach(stat => {
         var value = companyData[stat];
@@ -819,7 +827,7 @@ async function updateRatioTable(companySymbol) {
             value = value.toFixed(5);
             htmlStr += '<td>' + String(value) + "</td>";
         } else if (Array.isArray(value) == true){
-            var currentnumber = Number(value[0]); //getting the first "ratio" in the list for now. Can change from [0] (most current year) according to the year you want. E.G. [1] will be the previous year.
+            var currentnumber = Number(value[year_index]); //getting the first "ratio" in the list for now. Can change from [0] (most current year) according to the year you want. E.G. [1] will be the previous year.
             htmlStr += '<td>' + String(currentnumber.toFixed(5)) + "</td>";
         }
 
@@ -832,63 +840,4 @@ function createDescPopover(description){
     var popover = `<i class="far fa-question-circle"
     data-toggle="tooltip" data-placement="right" title="${description}"></i>`;
     return popover;
-}
-
-
-
-
-// ignore this function please
-async function constructRatioTable(companyList=['IBM', 'AAPL']){
-    const ratioInfo = initRatioNamesAndDesc();
-    var data = {};
-
-    htmlStr = `<table class="table">
-    <thead class="thead-dark">
-        <tr id="company-names">
-            <th></th>`;
-    
-    for (const companySymbol of companyList) {
-        //console.log("Ran once");
-        var companyData = await computeallratios(companySymbol);
-        data[companySymbol] = companyData;
-        // companyJSON = await getCompanyBySymbol(companySymbol);
-        htmlStr += `<th>${companySymbol}</th>`;
-        // htmlStr += `<th>${companyJSON.name}</th>`;
-    }
-
-    //console.log(data);
-
-    htmlStr += `</tr></thead>`;
-    
-    Object.keys(ratioInfo).forEach(stat => {
-        var statName = ratioInfo[stat][0];
-        var statDesc = ratioInfo[stat][1];
-        var popoverElement = createDescPopover(statDesc);
-        htmlStr += `<tr id="${stat}"><th>${statName} ${popoverElement}</th>`;
-        companyList.forEach(symbol => {
-            var value = data[symbol][stat];
-            //console.log(value);
-            if (value == undefined || value == null){
-                value = "Not found";
-                htmlStr += '<td>' + String(value) + "</td>";
-            } else if (typeof(value) == 'number'){
-                value = value.toFixed(5);
-                htmlStr += '<td>' + String(value) + "</td>";
-            } else if (Array.isArray(value) == true){
-                //console.log("Number hit");
-                //console.log(value[0]);
-                var currentnumber = Number(value[0]); //getting the first "ratio" in the list for now. Can change from [0] (most current year) according to the year you want. E.G. [1] will be the previous year.
-                htmlStr += '<td>' + String(currentnumber.toFixed(5)) + "</td>";
-                //console.log(value1);
-            }
-            //htmlStr += '<td>' + String(value) + "</td>";
-            //htmlStr += `<td>${data[symbol][stat]}</td>`;
-            
-        })
-        htmlStr += "</tr>";
-    })
-
-    htmlStr += "</table>";
-    //console.log(htmlStr);
-    return htmlStr;
 }

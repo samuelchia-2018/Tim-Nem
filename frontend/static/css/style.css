@@ -1,21 +1,3 @@
-.dropdown-submenu {
-    position: relative;
-}
-
-.dropdown-submenu a::after {
-    transform: rotate(-90deg);
-    position: absolute;
-    right: 6px;
-    top: .8em;
-}
-
-.dropdown-submenu .dropdown-menu {
-    top: 0;
-    left: 100%;
-    margin-left: .1rem;
-    margin-right: .1rem;
-}
-
 body, html {
     width: 100%;
     height: 100%;
@@ -39,14 +21,6 @@ body, html {
     position: relative;
 }
 
-.mycustom input[type=text] {
-    /* border-color:#9D9D9D;
-    border-radius:30px;
-    border:1px; */
-    width: 100%;
-    padding-right: 123px;
-}
-
 .mycustom .input-group-prepend {
     position: absolute;
     right: 4px;
@@ -55,31 +29,13 @@ body, html {
     z-index: 9;
 }
 
-.active {
-    background-color: #26C1E0;
-}
-
 .action {
     cursor: pointer;
     size: 30px;
     transition: transform 0.5s;
-    /* background-size: 100% auto;
-    background-position: center; */
-    /* background-color: Transparent; */
-    /* background-repeat: no-repeat; */
-    /* border: none;
-    outline: none; */
     margin: 0px 5px;
     vertical-align: middle;
 }
-
-.action-list:last-child {
-    margin-right: 10px;
-}
-
-/* .action:hover {
-    transform: scale(1.2);
-} */
 
 .barlow {
     font-family: 'Barlow Semi Condensed';
@@ -118,23 +74,7 @@ button.multiselect {
 /*     text-shadow: 0px 1px 0 #a2a2a2; */
 }
 
-.review-pop {
-    width: auto;
-    display: table;
-    padding-right:10px;
-}
-
-a:link {
-    color: #005747;
-}
-a:visited {
-    color: #009479;
-}
-a:hover {
-    color: #94004c;
-}
-
-tr {
+tr,th {
     line-height: 20px;
     max-height: 15px;
     height: 15px;
