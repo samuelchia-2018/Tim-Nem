@@ -709,7 +709,7 @@ async function computeallratios(companyname){
 
     //market value measures here
     var peratios = await PEratio(companyname);
-    // var MTB = await marketobookratio(companyname, balance_sheet_data);
+    var MTB = await marketobookratio(companyname, balance_sheet_data);
 
     var finaldata = {
         "CurrentRatio" : currentratios,
@@ -731,8 +731,8 @@ async function computeallratios(companyname){
         "NetProfitMargin": netprofitmargins,
         "ReturnOnAsset": roas,
         "ReturnOnEquity": roes,
-        "PriceEquityRatio": peratios
-        // "MarketToBookRatio": MTB
+        "PriceEquityRatio": peratios,
+        "MarketToBookRatio": MTB
     };
 
     console.log(finaldata);
@@ -795,19 +795,29 @@ async function constructRatioTable(companyList=['IBM', 'AAPL']){
         htmlStr += `<tr><th>${statName} ${popoverElement}</th>`;
         companyList.forEach(symbol => {
             var value = data[symbol][stat];
+            //console.log(value);
             if (value == undefined || value == null){
                 value = "Not found";
+                htmlStr += '<td>' + String(value) + "</td>";
             } else if (typeof(value) == 'number'){
                 value = value.toFixed(5);
+                htmlStr += '<td>' + String(value) + "</td>";
+            } else if (Array.isArray(value) == true){
+                //console.log("Number hit");
+                //console.log(value[0]);
+                var currentnumber = Number(value[0]); //getting the first "ratio" in the list for now. Can change from [0] (most current year) according to the year you want. E.G. [1] will be the previous year.
+                htmlStr += '<td>' + String(currentnumber.toFixed(5)) + "</td>";
+                //console.log(value1);
             }
-            htmlStr += `<td>${data[symbol][stat]}</td>`;
+            //htmlStr += '<td>' + String(value) + "</td>";
+            //htmlStr += `<td>${data[symbol][stat]}</td>`;
             
         })
         htmlStr += "</tr>";
     })
 
     htmlStr += "</table>";
-
+    console.log(htmlStr);
     return htmlStr;
 }
 
