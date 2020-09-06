@@ -31,11 +31,7 @@ async function getcurrentassets(companyname, balance_sheet){
 
 async function getcurrentliabilites(companyname, balance_sheet){
     //var balance_sheet = await getcompanybalancesheetjsondata(companyname);
-<<<<<<< HEAD
-    // console.log(balance_sheet);
-=======
     //console.log(balance_sheet);
->>>>>>> 776650765695ee2f158692ee8cac8d84f1715587
     //var annual_reports = await balance_sheet.annualReports;
     var annual_reports = balance_sheet.annualReports;
     var all_current_liabilities = [];
@@ -670,11 +666,7 @@ async function marketobookratio(companyname, balance_sheet){
 
 async function computeallratios(companyname){
     var balance_sheet_data = await getcompanybalancesheetjsondata(companyname);
-<<<<<<< HEAD
-    // console.log(balance_sheet_data);
-=======
     //console.log(balance_sheet_data);
->>>>>>> 776650765695ee2f158692ee8cac8d84f1715587
     var income_statement_data = await getcompanyincomestatementjsondata(companyname);
     // console.log(income_statement_data);
     //liquidity ratios here
@@ -810,7 +802,6 @@ async function updateRatioTable(companySymbol) {
         var value = companyData[stat];
         var htmlStr = "";
 
-<<<<<<< HEAD
         if (value == undefined || value == null){
             value = "Not found";
             htmlStr += '<td>' + String(value) + "</td>";
@@ -838,9 +829,6 @@ function createDescPopover(description){
 
 // ignore this function please
 async function constructRatioTable(companyList=['IBM', 'AAPL']){
-=======
-async function constructRatioTable(companyList){
->>>>>>> 776650765695ee2f158692ee8cac8d84f1715587
     const ratioInfo = initRatioNamesAndDesc();
     var data = {};
 
@@ -891,10 +879,6 @@ async function constructRatioTable(companyList){
     })
 
     htmlStr += "</table>";
-<<<<<<< HEAD
-    // console.log(htmlStr);
-=======
     //console.log(htmlStr);
->>>>>>> 776650765695ee2f158692ee8cac8d84f1715587
     return htmlStr;
 }
