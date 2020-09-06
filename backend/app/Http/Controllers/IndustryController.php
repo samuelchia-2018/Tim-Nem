@@ -10,7 +10,7 @@ class IndustryController extends Controller
 {
     public function getAllIndustries()
     {
-        $industries = Industry::all();
+        $industries = Industry::orderBy('name', 'asc')->get();
         return response()->json($industries, 200);
     }
 

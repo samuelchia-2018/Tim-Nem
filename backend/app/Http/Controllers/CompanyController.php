@@ -11,7 +11,7 @@ class CompanyController extends Controller
 {
     public function getAllCompanies()
     {
-        $companies = Company::all();
+        $companies = Company::orderBy('symbol', 'asc')->get();
         return response()->json($companies, 200);
     }
 
