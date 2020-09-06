@@ -7,8 +7,8 @@ async function getcompanybalancesheetjsondata(companyname){
 }
 
 async function getcompanyincomestatementjsondata(companyname){
-    // var serviceURL = "https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=" + companyname+"&apikey=NBKV8YLSSH92V2LU";
-    var serviceURL = "https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=" + companyname+"&apikey=164GD01KSMX23URK";
+    var serviceURL = "https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=" + companyname+"&apikey=8FD6J27P60XT9SS2";
+    //var serviceURL = "https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=" + companyname+"&apikey=164GD01KSMX23URK";
     var companyfinancialdatajson = await fetch(serviceURL, {method: 'GET'});
     var data = await companyfinancialdatajson.json();
     return data;
@@ -31,7 +31,7 @@ async function getcurrentassets(companyname, balance_sheet){
 
 async function getcurrentliabilites(companyname, balance_sheet){
     //var balance_sheet = await getcompanybalancesheetjsondata(companyname);
-    console.log(balance_sheet);
+    //console.log(balance_sheet);
     //var annual_reports = await balance_sheet.annualReports;
     var annual_reports = balance_sheet.annualReports;
     var all_current_liabilities = [];
@@ -623,7 +623,7 @@ async function getstockprices2(companyname){
 
 async function getEPS(companyname){
     // var serviceURL = 'https://www.alphavantage.co/query?function=OVERVIEW&symbol=' + companyname + '&apikey=NBKV8YLSSH92V2LU';
-    var serviceURL = 'https://www.alphavantage.co/query?function=OVERVIEW&symbol=' + companyname + '&apikey=SA4ZNST85AZA41KN';
+    var serviceURL = 'https://www.alphavantage.co/query?function=OVERVIEW&symbol=' + companyname + '&apikey=UDKQ7NV2Z27YRJ9L';
     //console.log(serviceURL);
     var response = await fetch(serviceURL);
     var data = await response.json();
@@ -666,7 +666,7 @@ async function marketobookratio(companyname, balance_sheet){
 
 async function computeallratios(companyname){
     var balance_sheet_data = await getcompanybalancesheetjsondata(companyname);
-    console.log(balance_sheet_data);
+    //console.log(balance_sheet_data);
     var income_statement_data = await getcompanyincomestatementjsondata(companyname);
     console.log(income_statement_data);
     //liquidity ratios here
@@ -735,7 +735,7 @@ async function computeallratios(companyname){
         "MarketToBookRatio": MTB
     };
 
-    console.log(finaldata);
+    //console.log(finaldata);
     return finaldata;
 }
 
@@ -767,7 +767,7 @@ function initRatioNamesAndDesc() {
 }
 
 
-async function constructRatioTable(companyList=['IBM', 'AAPL']){
+async function constructRatioTable(companyList){
     const ratioInfo = initRatioNamesAndDesc();
     var data = {};
 
@@ -777,6 +777,7 @@ async function constructRatioTable(companyList=['IBM', 'AAPL']){
             <th></th>`;
     
     for (const companySymbol of companyList) {
+        //console.log("Ran once");
         var companyData = await computeallratios(companySymbol);
         data[companySymbol] = companyData;
         // companyJSON = await getCompanyBySymbol(companySymbol);
@@ -784,7 +785,7 @@ async function constructRatioTable(companyList=['IBM', 'AAPL']){
         // htmlStr += `<th>${companyJSON.name}</th>`;
     }
 
-    console.log(data);
+    //console.log(data);
 
     htmlStr += `</tr></thead>`;
     
@@ -817,7 +818,7 @@ async function constructRatioTable(companyList=['IBM', 'AAPL']){
     })
 
     htmlStr += "</table>";
-    console.log(htmlStr);
+    //console.log(htmlStr);
     return htmlStr;
 }
 

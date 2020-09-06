@@ -38,7 +38,7 @@
     // NOTE: currently cannot use computeallratios on multiple companies?
     // NOTE2: please integrate DB, frontend API uses AlphaVantage but the backend DB uses FinnHubb
     $(document).ready(async function(){
-        var table = await constructRatioTable(["IBM","AAPL"]);
+        var table = await constructRatioTable(["AAPL", "IBM"]);
         $("#table-div").append(table);
     })
     </script>
