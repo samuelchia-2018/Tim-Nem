@@ -13,21 +13,21 @@ async function getAllCompanies() {
 }
 
 async function getCompanyBySymbol(symbol) {
-    var timNemURL = `http://app.timnem.tk/api/companies/symbol/${symbol}`;
+    var timNemURL = `http://app.timnem.tk/api/companies/symbol/${encodeURI(symbol)}`;
     var companyJSON = await fetch(timNemURL, {method: "GET"});
     var data = await companyJSON.json();
     return data;
 }
 
 async function searchCompaniesBySymbol(symbol) {
-    var timNemURL = `http://app.timnem.tk/api/companies/search/symbol/${symbol}`;
+    var timNemURL = `http://app.timnem.tk/api/companies/search/symbol/${encodeURI(symbol)}`;
     var companiesJSON = await fetch(timNemURL, {method: "GET"});
     var data = await companiesJSON.json();
     return data;
 }
 
 async function getCompaniesByIndustry(industry) {
-    var timNemURL = `http://app.timnem.tk/api/companies/industry/${industry}`;
+    var timNemURL = `http://app.timnem.tk/api/companies/industry/${encodeURI(industry)}`;
     var companiesJSON = await fetch(timNemURL, {method: "GET"});
     var data = await companiesJSON.json();
     return data;
