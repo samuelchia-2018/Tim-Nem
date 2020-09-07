@@ -827,8 +827,13 @@ async function updateRatioTable(companySymbol, year) {
             value = value.toFixed(5);
             htmlStr += '<td>' + String(value) + "</td>";
         } else if (Array.isArray(value) == true){
-            var currentnumber = Number(value[year_index]); //getting the first "ratio" in the list for now. Can change from [0] (most current year) according to the year you want. E.G. [1] will be the previous year.
-            htmlStr += '<td>' + String(currentnumber.toFixed(5)) + "</td>";
+            if(isNaN(Number(value[year_index])) == false){
+                var currentnumber = Number(value[year_index]); //getting the first "ratio" in the list for now. Can change from [0] (most current year) according to the year you want. E.G. [1] will be the previous year.
+                htmlStr += '<td>' + String(currentnumber.toFixed(5)) + "</td>";
+            }
+            else{
+                htmlStr += '<td>' + "No " + String(stat) + "</td>";
+            }
         }
 
         $(`#${stat}`).append(htmlStr);
