@@ -802,24 +802,28 @@ async function updateRatioTable(companySymbol, year) {
     $("#company-names").append(`<th>${companyInfo.name} (${companySymbol}), ${year}</th>`);
 
     year_index = 0
-
-    switch(year){
-        case 2020:
-            year_index = 0;
-        case 2019:
-            year_index = 1;
-        case 2018:
-            year_index = 2;
-        case 2017:
-            year_index = 3;
-        case 2016:
-            year_index = 4;
+    if(String(year) == '2020'){
+        year_index = 0;
     }
+    if(String(year) == '2019'){
+        year_index = 1;
+    }
+    if(String(year) == '2018'){
+        year_index = 2;
+    }
+    if(String(year) == '2017'){
+        year_index = 3;
+    }
+    if(String(year) == '2016'){
+        year_index = 4;
+    }
+
     
     Object.keys(ratioInfo).forEach(stat => {
         var value = companyData[stat];
         var htmlStr = "";
-
+        console.log(value);
+        console.log(year_index);
         if (value == undefined || value == null){
             value = "Not found";
             htmlStr += '<td>' + String(value) + "</td>";
